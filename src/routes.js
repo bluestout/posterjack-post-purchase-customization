@@ -3,19 +3,7 @@ import { handleOrdersCreate } from "./webhooks/ordersCreate.js";
 
 const router = Router();
 
-// Raw body needed for HMAC verification
-router.post(
-  "/webhooks/orders-create",
-  (req, res, next) => {
-    let data = [];
-    req.on("data", (chunk) => data.push(chunk));
-    req.on("end", () => {
-      req.rawBody = Buffer.concat(data);
-      next();
-    });
-  },
-  handleOrdersCreate
-);
+router.post("/webhooks/orders-create", handleOrdersCreate);
 
 // Health check for uptime monitoring
 router.get("/health", (_req, res) => {

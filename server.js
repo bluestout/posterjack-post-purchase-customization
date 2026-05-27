@@ -5,7 +5,10 @@ import routes from "./src/routes.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Standard JSON body for non-webhook routes
+// Raw buffer for webhook routes (needed for HMAC verification)
+app.use("/webhooks", express.raw({ type: "application/json" }));
+
+// Standard JSON body for all other routes
 app.use(express.json());
 
 app.use("/", routes);

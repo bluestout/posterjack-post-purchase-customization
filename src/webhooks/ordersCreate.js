@@ -21,7 +21,7 @@ function verifyWebhook(rawBody, hmacHeader) {
 export async function handleOrdersCreate(req, res) {
   const hmac = req.headers["x-shopify-hmac-sha256"];
 
-  if (!hmac || !verifyWebhook(req.rawBody, hmac)) {
+  if (!hmac || !verifyWebhook(req.body, hmac)) {
     console.warn("[Webhook] Invalid HMAC — request rejected");
     return res.status(401).json({ error: "Unauthorized" });
   }
@@ -29,7 +29,7 @@ export async function handleOrdersCreate(req, res) {
   // Respond immediately — Shopify retries if it doesn't get 200 within 5s
   res.status(200).json({ received: true });
 
-  const order = JSON.parse(req.rawBody);
+  const order = JSON.parse(req.body);
   const { name: orderName, source_name: sourceName } = order;
 
   console.log(`[Webhook] Order ${orderName} | source_name: "${sourceName}"`);
